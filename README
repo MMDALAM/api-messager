@@ -8,10 +8,10 @@ Install `node_modules`
 run `api.messager`
 ``` npm start ```
 
-### Get All Users
+<!-- ### Get All Users
 `GET /users`
 
-#### Response
+#### Response -->
 ```
 [
   {
@@ -19,4 +19,3 @@ run `api.messager`
     "name": "John Doe"
   }
 ]
-```
