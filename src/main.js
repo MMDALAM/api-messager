@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const http = require('http');
 const cors = require('cors');
 require('dotenv').config();
-const { SERVER_PORT } = process.env;
+// const { SERVER_PORT } = process.env;
+const SERVER_PORT = 3000;
 const createError = require('http-errors');
 const { AllRouters } = require('./routers/router');
 
@@ -29,7 +30,8 @@ module.exports = class Application {
   }
 
   createMongodb() {
-    const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
+    // const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
+    const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
     mongoose.connect(DATABASE_MONGODB);
     mongoose.set('strictPopulate', true);
     mongoose.set('strictQuery', true);
