@@ -9,6 +9,7 @@ exports.verify = async (req, res, next) => {
     JWT.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET_USER, async (err, paylod) => {
       if (err) return res.status(403).json({ error: 'Invalid token.' });
       const user = await userModel.findById(paylod.id);
+      if (!user) res.status(403).json({ error: 'Invalid token.' });
       return res.status(200).json({ message: 'Token is valid', user: user });
     });
   } catch (err) {

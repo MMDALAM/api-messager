@@ -1,0 +1,13 @@
+## Endpoints
+
+### Get All Users
+`GET /users`
+
+#### Response
+```json
+[
+  {
+    "id": 1,
+    "name": "John Doe"
+  }
+]

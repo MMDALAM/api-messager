@@ -17,7 +17,6 @@ class authController extends controller {
 
   async register(req, res, next) {
     try {
-      console.log('register');
       const { username, password } = req.body;
       const hashPassword = await hashPass(password);
       const NewUser = new userModel({ username, password: hashPassword });
