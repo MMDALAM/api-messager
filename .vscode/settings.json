@@ -1,0 +1,15 @@
+{
+    "javascript.suggestionActions.enabled": false,
+    "editor.formatOnSave": true,
+    "prettier.singleQuote": true,
+    "prettier.printWidth": 140,
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#42037C",
+      "titleBar.activeBackground": "#5C05AE",
+      "titleBar.activeForeground": "#FDFBFF"
+    }
+  }
+  
