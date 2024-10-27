@@ -23,7 +23,12 @@ class authController extends controller {
       const NewUser = new userModel({ username, password: hashPassword });
       await NewUser.save();
       const token = await jwtSign(NewUser._id);
-      return res.status(201).json({ message: 'User created successfully', token: token });
+      return res.status(201).json({
+        message: 'User created successfully',
+        method: 'Register',
+        token: token,
+        user: NewUser,
+      });
     } catch (err) {
       next(err);
     }
@@ -37,7 +42,12 @@ class authController extends controller {
       if (!user || !(await comparePass(password, user.password))) return res.status(401).json({ message: 'Invalid username or password' });
 
       const token = await jwtSign(user.id);
-      res.json({ message: 'Login successfully', token: token, user: user });
+      res.json({
+        message: 'Login successfully',
+        method: 'Login',
+        token: token,
+        user: user,
+      });
     } catch (err) {
       next(err);
     }
