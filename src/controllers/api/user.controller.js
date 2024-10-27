@@ -18,7 +18,7 @@ class userController extends controller {
       if (!id) return res.status(400).json({ message: 'Invalid user ID' });
       const users = await userModel.findOneAndDelete({ _id: id });
       if (!users) return res.status(404).json({ message: 'User not found' });
-      return res.status(200).json({ date: 'User Deleted ' });
+      return res.status(200).json({ message: 'User Deleted' });
     } catch (err) {
       next(err);
     }
