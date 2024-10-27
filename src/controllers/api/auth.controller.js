@@ -37,7 +37,7 @@ class authController extends controller {
       if (!user || !(await comparePass(password, user.password))) return res.status(401).json({ message: 'Invalid username or password' });
 
       const token = await jwtSign(user.id);
-      res.json({ message: 'Login successfully', token: token });
+      res.json({ message: 'Login successfully', token: token, user: user });
     } catch (err) {
       next(err);
     }
