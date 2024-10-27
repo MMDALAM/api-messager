@@ -1,4 +1,4 @@
-`NDOEJS` version: `20.11.0`
+`NDOE` version: `20.11.0`
 
 `NPM` version: `10.2.4`
 

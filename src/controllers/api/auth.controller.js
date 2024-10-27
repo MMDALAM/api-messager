@@ -1,7 +1,7 @@
-const { cache } = require('joi');
 const userModel = require('../../models/user.model');
 const { jwtSign, hashPass, comparePass } = require('../../utils/function');
 const controller = require('../contoller');
+const { authSchema } = require('../../validators/auth.validator');
 
 class authController extends controller {
   async auth(req, res, next) {
@@ -17,6 +17,7 @@ class authController extends controller {
 
   async register(req, res, next) {
     try {
+      await authSchema.validateAsync(req.body);
       const { username, password } = req.body;
       const hashPassword = await hashPass(password);
       const NewUser = new userModel({ username, password: hashPassword });
@@ -30,6 +31,7 @@ class authController extends controller {
 
   async login(req, res, next) {
     try {
+      await authSchema.validateAsync(req.body);
       const { username, password } = req.body;
       const user = await userModel.findOne({ username });
       if (!user || !(await comparePass(password, user.password))) return res.status(401).json({ message: 'Invalid username or password' });
@@ -41,18 +43,23 @@ class authController extends controller {
     }
   }
 
-  async verify(req, res, next) {
+  async findMany(req, res, next) {
     try {
-      return res.status(200).json({ message: 'Token is valid' });
+      const users = await userModel.find({}, { __v: 0, createdAt: 0, updatedAt: 0, role: 0, password: 0 });
+      if (!users) return res.status(404).json({ message: 'User not found' });
+      return res.status(200).json({ users: users });
     } catch (err) {
       next(err);
     }
   }
-  async findOne(req, res, next) {
+
+  async delete(req, res, next) {
     try {
-      const user = await userModel.findById(req.user._id);
-      if (!user) return res.status(404).json({ message: 'User not found' });
-      return res.status(200).json({ user: user });
+      const { id } = req.params;
+      if (!id) return res.status(400).json({ message: 'Invalid user ID' });
+      const users = await userModel.findOneAndDelete({ _id: id });
+      if (!users) return res.status(404).json({ message: 'User not found' });
+      return res.status(200).json({ date: 'User Deleted ' });
     } catch (err) {
       next(err);
     }
