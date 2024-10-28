@@ -1,7 +1,8 @@
 const Joi = require('joi');
 
 const authSchema = Joi.object({
-  username: Joi.string().max(50).required().messages({
+  username: Joi.string().min(3).max(50).required().messages({
+    'string.min': 'Username cannot be less than 3 characters',
     'string.max': 'Username cannot be more than 50 characters',
     'string.empty': 'Username cannot be empty',
   }),

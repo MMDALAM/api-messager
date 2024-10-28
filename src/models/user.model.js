@@ -8,6 +8,7 @@ const user = mongoose.Schema(
     avatar: { type: String },
     status: { type: String, default: 'offline' },
     role: { type: String, default: 'user' },
+    token: { type: String },
     last_login: { type: Date },
   },
   { timestamps: true }

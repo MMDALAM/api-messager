@@ -30,8 +30,8 @@ module.exports = class Application {
   }
 
   createMongodb() {
-    // const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
-    const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
+    const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
+    // const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
     mongoose.connect(DATABASE_MONGODB);
     mongoose.set('strictPopulate', true);
     mongoose.set('strictQuery', true);
@@ -51,7 +51,7 @@ module.exports = class Application {
       const serverError = createError.InternalServerError('InternalServerError');
       const message = error.message || serverError.message;
       const status = error.status || serverError.status;
-      return res.status(status).json({ errors: message });
+      return res.status(status).json({ message: message });
     });
   }
 };

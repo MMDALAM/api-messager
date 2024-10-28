@@ -1,9 +1,13 @@
 const JWT = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const userModel = require('../models/user.model');
 function jwtSign(id) {
   return new Promise(async (resolve, reject) => {
-    JWT.sign({ id: id }, process.env.JWT_ACCESS_TOKEN_SECRET_USER, { expiresIn: '7d' }, (err, token) => {
+    const user = await userModel.findById(id);
+    JWT.sign({ id: id }, process.env.JWT_ACCESS_TOKEN_SECRET_USER, { expiresIn: '10m' }, async (err, token) => {
       if (err) reject(err.message);
+      user.token = token;
+      await user.save();
       resolve(token);
     });
   });
