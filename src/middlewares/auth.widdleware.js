@@ -7,7 +7,6 @@ function tokens(headers) {
   if (!token) return createError(401, 'Access denied. No token provided.');
   return token;
 }
-
 exports.verifyUser = async (req, res, next) => {
   try {
     const token = tokens(req?.headers);
@@ -22,7 +21,6 @@ exports.verifyUser = async (req, res, next) => {
     next(err);
   }
 };
-
 exports.verify = async (req, res, next) => {
   try {
     const token = tokens(req?.headers);
