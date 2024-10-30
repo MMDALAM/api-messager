@@ -4,7 +4,7 @@ const userModel = require('../models/user.model');
 function jwtSign(id) {
   return new Promise(async (resolve, reject) => {
     const user = await userModel.findById(id);
-    JWT.sign({ id: id }, process.env.JWT_ACCESS_TOKEN_SECRET_USER, { expiresIn: '10m' }, async (err, token) => {
+    JWT.sign({ id: id }, process.env.JWT_ACCESS_TOKEN_SECRET_USER, { expiresIn: '1y' }, async (err, token) => {
       if (err) reject(err.message);
       user.token = token;
       await user.save();
