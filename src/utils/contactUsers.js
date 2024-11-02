@@ -4,8 +4,8 @@ const userModel = require('../models/user.model');
 const initSocket = (server) => {
   const io = socketIO(server, {
     reconnectionAttempts: 5, // تعداد تلاش مجدد
-    reconnectionDelay: 1000,
-    cors: { origin: '*' }, // فاصله زمانی بین تلاش‌ها به میلی‌ثانیه
+    reconnectionDelay: 1000, // فاصله زمانی بین تلاش‌ها به میلی‌ثانیه
+    cors: { origin: '*' },
   });
   io.on('connection', async (socket) => {
     console.log(`User connected: ${socket.id}`);
