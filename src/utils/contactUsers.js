@@ -8,9 +8,9 @@ const initSocket = (server) => {
     cors: { origin: '*' },
   });
 
-  const statusNamespace = io.of('/statusUsers');
+  const userStatus = io.of('/userStatus');
 
-  statusNamespace.on('connection', async (socket) => {
+  userStatus.on('connection', async (socket) => {
     console.log(`User connected: ${socket.id}`);
 
     // event get userOnline
@@ -25,12 +25,16 @@ const initSocket = (server) => {
 
       try {
         // به‌روزرسانی وضعیت کاربر به 'online' در MongoDB
-        await userModel.findByIdAndUpdate(userId, { status: 'online' });
+        const user = await userModel.findByIdAndUpdate(userId, { status: 'online' });
+        if (!user) {
+          socket.emit('error', { message: 'User Not Found' });
+          return;
+        }
 
         // ارسال لیست به‌روز شده کاربران آنلاین به همه کلاینت‌ها
         const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
         //events onlineUsers
-        statusNamespace.emit('onlineUsers', onlineUsers);
+        userStatus.emit('onlineUsers', onlineUsers);
       } catch (error) {
         console.error('Error updating user status:', error);
         socket.emit('error', { message: 'Failed to update user status' });
@@ -48,10 +52,9 @@ const initSocket = (server) => {
 
       // پیدا کردن کاربر با استفاده از socket.id و تغییر وضعیت به 'offline'
       const user = await userModel.findOneAndUpdate({ status: 'online' }, { status: 'offline' });
-
       if (user) {
         const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
-        statusNamespace.emit('onlineUsers', onlineUsers);
+        userStatus.emit('onlineUsers', onlineUsers);
         console.log(`User ${user.username} went offline`);
       }
     });
