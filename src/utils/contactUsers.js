@@ -17,7 +17,7 @@ const initSocket = (server) => {
       if (!userId || typeof userId !== 'string' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
         console.error(`Invalid userId: ${userId}`);
         socket.emit('error', { message: 'Invalid userId format or userId not provided' });
-        return; // خروج از تابع تا از اجرای ادامه جلوگیری شود
+        return;
       }
 
       try {
@@ -53,7 +53,6 @@ const initSocket = (server) => {
       }
     });
   });
-
   return io;
 };
 
