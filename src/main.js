@@ -8,6 +8,7 @@ require('dotenv').config();
 const SERVER_PORT = 3000;
 const createError = require('http-errors');
 const { AllRouters } = require('./routers/router');
+const initSocket = require('./utils/contactUsers');
 
 module.exports = class Application {
   constructor() {
@@ -26,12 +27,13 @@ module.exports = class Application {
 
   createServer() {
     const server = http.createServer(app);
+    initSocket(server);
     server.listen(SERVER_PORT, () => console.log(`server run to PORT : ${SERVER_PORT}`));
   }
 
   createMongodb() {
-    // const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
-    const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
+    const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
+    // const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
     mongoose.connect(DATABASE_MONGODB);
     mongoose.set('strictPopulate', true);
     mongoose.set('strictQuery', true);
