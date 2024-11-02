@@ -7,7 +7,10 @@ const initSocket = (server) => {
     reconnectionDelay: 1000, // فاصله زمانی بین تلاش‌ها به میلی‌ثانیه
     cors: { origin: '*' },
   });
-  io.on('connection', async (socket) => {
+
+  const statusNamespace = io.of('/statusUsers');
+
+  statusNamespace.on('connection', async (socket) => {
     console.log(`User connected: ${socket.id}`);
 
     // event get userOnline
@@ -27,7 +30,7 @@ const initSocket = (server) => {
         // ارسال لیست به‌روز شده کاربران آنلاین به همه کلاینت‌ها
         const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
         //events onlineUsers
-        io.emit('onlineUsers', onlineUsers);
+        statusNamespace.emit('onlineUsers', onlineUsers);
       } catch (error) {
         console.error('Error updating user status:', error);
         socket.emit('error', { message: 'Failed to update user status' });
@@ -35,7 +38,7 @@ const initSocket = (server) => {
     });
 
     socket.on('error', (err) => {
-      console.error('error in connect socket', err);
+      console.error('error socket');
       // اقدامات لازم برای ارور
     });
 
@@ -48,7 +51,7 @@ const initSocket = (server) => {
 
       if (user) {
         const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
-        io.emit('onlineUsers', onlineUsers);
+        statusNamespace.emit('onlineUsers', onlineUsers);
         console.log(`User ${user.username} went offline`);
       }
     });
