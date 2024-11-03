@@ -11,35 +11,31 @@ const initSocket = (server) => {
   const userStatus = io.of('/userStatus');
 
   userStatus.on('connection', async (socket) => {
-    console.log(`User connected: ${socket.id}`);
+    const userId = socket.handshake.query.id;
 
-    // event get userOnline
-    socket.on('userOnline', async (users) => {
-      const userId = users?.data?.userId;
+    if (!userId || typeof userId !== 'string' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
+      socket.emit('error', { message: 'Invalid userId format or userId not provided' });
+      return;
+    }
 
-      if (!userId || typeof userId !== 'string' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
-        console.error(`Invalid userId: ${userId}`);
-        socket.emit('error', { message: 'Invalid userId format or userId not provided' });
+    try {
+      // به‌روزرسانی وضعیت کاربر به 'online' در MongoDB
+      const user = await userModel.findByIdAndUpdate(userId, { status: 'online' });
+      if (!user) {
+        socket.emit('error', { message: 'User Not Found' });
         return;
       }
 
-      try {
-        // به‌روزرسانی وضعیت کاربر به 'online' در MongoDB
-        const user = await userModel.findByIdAndUpdate(userId, { status: 'online' });
-        if (!user) {
-          socket.emit('error', { message: 'User Not Found' });
-          return;
-        }
-
-        // ارسال لیست به‌روز شده کاربران آنلاین به همه کلاینت‌ها
-        const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
-        //events onlineUsers
-        userStatus.emit('onlineUsers', onlineUsers);
-      } catch (error) {
-        console.error('Error updating user status:', error);
-        socket.emit('error', { message: 'Failed to update user status' });
-      }
-    });
+      // ارسال لیست به‌روز شده کاربران آنلاین به همه کلاینت‌ها
+      const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
+      const allUsers = await userModel.find({}, { username: 1, status: 1 });
+      //events onlineUsers
+      userStatus.emit('onlineUsers', onlineUsers);
+      userStatus.emit('allUsers', allUsers);
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      socket.emit('error', { message: 'Failed to update user status' });
+    }
 
     socket.on('error', (err) => {
       console.error('error socket');
@@ -54,7 +50,9 @@ const initSocket = (server) => {
       const user = await userModel.findOneAndUpdate({ status: 'online' }, { status: 'offline' });
       if (user) {
         const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
+        const allUsers = await userModel.find({}, { username: 1, status: 1 });
         userStatus.emit('onlineUsers', onlineUsers);
+        userStatus.emit('allUsers', allUsers);
         console.log(`User ${user.username} went offline`);
       }
     });
