@@ -26,6 +26,8 @@ const initSocket = (server) => {
         return;
       }
 
+      console.log(`User ${user.username} went offline`);
+
       // ارسال لیست به‌روز شده کاربران آنلاین به همه کلاینت‌ها
       const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
       const allUsers = await userModel.find({}, { username: 1, status: 1 });
