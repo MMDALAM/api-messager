@@ -35,7 +35,6 @@ const initSocket = (server) => {
       userStatus.emit('onlineUsers', onlineUsers);
       userStatus.emit('allUsers', allUsers);
     } catch (error) {
-      console.error('Error updating user status:', error);
       socket.emit('error', { message: 'Failed to update user status' });
     }
 
