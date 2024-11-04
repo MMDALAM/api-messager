@@ -4,7 +4,7 @@ const controller = require('../contoller');
 class userController extends controller {
   async findMany(req, res, next) {
     try {
-      const users = await userModel.find({}, { __v: 0, createdAt: 0, updatedAt: 0, role: 0, password: 0, token: 0 });
+      const users = await userModel.find({}, { username: 1, status: 1 });
       if (!users) return res.status(404).json({ message: 'User not found' });
       return res.status(200).json({ users: users });
     } catch (err) {
