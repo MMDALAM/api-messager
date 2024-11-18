@@ -27,32 +27,4 @@ const roomEventHandlesdsdrs = (socket, namespace, io, userId) => {
     }
   });
 };
-
-const roomEventHandlers = (socket, namespace, io, userId) => {
-  // ایجاد گروه جدید
-  socket.on('createRoom', async (data) => {
-    try {
-      const name = data?.data?.name;
-      const members = data?.data?.members;
-      const admin = data?.data?.admin;
-
-      const newRoom = new Room({
-        name: name,
-        members: members,
-        admin: [admin],
-      });
-
-      await newRoom.save();
-
-      // ارسال اطلاعات گروه جدید به همه اعضا
-      members.forEach(async (memberId) => {
-        const userRooms = await Room.find({ members: memberId });
-        namespace.to(memberId.toString()).emit('rooms', userRooms);
-      });
-    } catch (error) {
-      handleSocketError(socket, 'Failed to create room');
-    }
-  });
-};
-
 module.exports = roomEventHandlers;
