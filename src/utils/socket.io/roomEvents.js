@@ -50,7 +50,6 @@ const roomEventHandlers = (socket, namespace, io, userId) => {
         namespace.to(memberId.toString()).emit('rooms', userRooms);
       });
     } catch (error) {
-      console.log(error);
       handleSocketError(socket, 'Failed to create room');
     }
   });
