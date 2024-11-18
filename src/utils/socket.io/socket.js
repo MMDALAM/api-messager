@@ -18,7 +18,6 @@ const initSocket = (server) => {
     const userId = getUserIdFromParams(socket);
     if (userId) {
       setUserStatus(userId, 'online', socket, io);
-      // await roomsLists(io, userId);
     }
 
     // const roomsNamespace = io.of('/rooms');
