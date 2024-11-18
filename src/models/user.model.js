@@ -10,6 +10,8 @@ const user = mongoose.Schema(
     role: { type: String, default: 'user' },
     token: { type: String },
     last_login: { type: Date },
+    rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
+    avatar: { type: String },
   },
   { timestamps: true }
 );

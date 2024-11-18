@@ -2,7 +2,7 @@ const socketIO = require('socket.io');
 const userModel = require('../models/user.model');
 
 // تابع اصلی برای راه‌اندازی سوکت
-const initSocket = (server) => {
+const initSocket142 = (server) => {
   const io = socketIO(server, {
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
@@ -29,7 +29,6 @@ const initSocket = (server) => {
   return io;
 };
 
-// تابعی برای اعتبارسنجی userId
 const validateUserId = (socket) => {
   const userId = socket.handshake.query.id;
   if (!userId || typeof userId !== 'string' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
@@ -91,4 +90,4 @@ const handleSocketError = (socket, message) => {
   socket.emit('error', { message });
 };
 
-module.exports = initSocket;
+module.exports = initSocket142;

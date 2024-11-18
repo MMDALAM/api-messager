@@ -8,7 +8,7 @@ require('dotenv').config();
 const SERVER_PORT = 3000;
 const createError = require('http-errors');
 const { AllRouters } = require('./routers/router');
-const initSocket = require('./socket.io/contactUsers');
+const initSocket = require('./utils/socket.io/socket');
 
 module.exports = class Application {
   constructor() {
