@@ -64,17 +64,6 @@ const initSocket = (server) => {
     });
   });
 
-  // تنظیم فضای نام برای وضعیت کاربران
-  // const userStatusNamespace = io.of('/userStatus');
-  // userStatusNamespace.on('connection', (socket) => {
-  //   const userId = getUserIdFromParams(socket);
-  //   if (userId) {
-  //     await userModel.findByIdAndUpdate(userId, { status });
-  //     await broadcastUserLists(namespace);
-  //     userStatusHandlers(socket, userStatusNamespace, userId);
-  //   }
-  // });
-
   // تنظیم فضای نام برای مخاطبین
   // const contactsNamespace = io.of('/contacts');
   // contactsNamespace.on('connection', (socket) => {
