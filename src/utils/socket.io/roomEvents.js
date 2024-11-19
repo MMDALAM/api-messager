@@ -1,7 +1,6 @@
 // const Room = require('../../models/room.model');
 // const { handleSocketError, roomsLists } = require('./socketHandlers');
 // const userModel = require('../../models/user.model');
-// const userSocketMap = {};
 
 // const roomEventHandlesdsdrs = (socket, namespace, io, userId) => {
 //   socket.on('createRoom', async (data) => {

@@ -1,7 +1,7 @@
 const userModel = require('../../models/user.model');
 const { handleSocketError } = require('./socketHandlers');
 
-const contactEventHandlers = (socket, namespace, userId) => {
+const contactEventHandlers = (socket) => {
   socket.on('getContacts', async () => {
     try {
       const contacts = await userModel.find({}, { username: 1, status: 1 });
