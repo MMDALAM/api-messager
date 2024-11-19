@@ -21,7 +21,6 @@
 //       console.log('send new room');
 //       await roomsLists(io, userId);
 //     } catch (error) {
-//       console.log(error);
 //       handleSocketError(socket, 'Failed to create room');
 //     }
 //   });
