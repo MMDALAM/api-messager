@@ -1,12 +1,5 @@
-const { broadcastUserLists, handleSocketError } = require('./socketHandlers');
+const { handleSocketError } = require('./socketHandlers');
 
-const userStatusHandlers = (socket, io, userId) => {
-  setUserStatus(userId, 'online', socket, io);
-
-  socket.on('disconnect', async () => {
-    await setUserStatus(userId, 'offline', socket, io);
-  });
-};
 const userModel = require('../../models/user.model');
 
 const setUserStatus = async (userId, status, socket, io) => {
@@ -16,7 +9,7 @@ const setUserStatus = async (userId, status, socket, io) => {
 
     io.emit('onlineUsers', onlineUsers);
   } catch (error) {
-    handleSocketError(socket, 'Failed to update user status');
+    handleSocketError(socket, 'users', 'Failed to update user status');
   }
 };
 
