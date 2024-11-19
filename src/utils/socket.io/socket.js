@@ -74,15 +74,6 @@ const initSocket = (server) => {
       }
     });
   });
-
-  // تنظیم فضای نام برای مخاطبین
-  // const contactsNamespace = io.of('/contacts');
-  // contactsNamespace.on('connection', (socket) => {
-  //   const userId = getUserIdFromParams(socket);
-  //   if (userId) {
-  //     contactEventHandlers(socket, contactsNamespace, userId);
-  //   }
-  // });
   return io;
 };
 
