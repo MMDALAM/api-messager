@@ -83,18 +83,6 @@ const initSocket = (server) => {
   //     contactEventHandlers(socket, contactsNamespace, userId);
   //   }
   // });
-
-  // تنظیم فضای نام برای گروه‌ها
-
-  // تنظیم فضای نام برای پیام‌ها
-  // const messagesNamespace = io.of('/messages');
-  // messagesNamespace.on('connection', (socket) => {
-  //   // const userId = getUserIdFromParams(socket);
-  //   // if (userId) {
-  //   messageEventHandlers(socket, messagesNamespace);
-  //   // }
-  // });
-
   return io;
 };
 
