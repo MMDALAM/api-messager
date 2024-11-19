@@ -2,19 +2,16 @@ const userModel = require('../../models/user.model');
 const Room = require('../../models/room.model');
 
 // مدیریت خطاها
-const handleSocketError = (socket, message) => {
-  console.error(message);
-  socket.emit('error', { message });
+const handleSocketError = (socket, type, message) => {
+  socket.emit('messages', { method: type, message });
 };
 
 // ارسال لیست کاربران به همه کلاینت‌ها
 const broadcastUserLists = async (io) => {
   try {
     const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
-    const allUsers = await userModel.find({}, { username: 1, status: 1 });
 
     io.emit('onlineUsers', onlineUsers);
-    io.emit('allUsers', allUsers);
   } catch (error) {
     console.error('Error broadcasting user lists:', error);
   }

@@ -22,4 +22,12 @@ async function comparePass(password, hash) {
   return await bcrypt.compareSync(password, hash);
 }
 
-module.exports = { jwtSign, hashPass, comparePass };
+async function isValidMongoId(id) {
+  if (!id) return false;
+  if (id.length !== 24) return false;
+  const hexRegex = /^[0-9a-fA-F]{24}$/;
+  if (hexRegex.test(id)) return true;
+  return false;
+}
+
+module.exports = { jwtSign, hashPass, comparePass, isValidMongoId };
