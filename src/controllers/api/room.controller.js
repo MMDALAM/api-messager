@@ -7,10 +7,12 @@ class roomController extends controller {
     try {
       const { id } = req.params;
       if (!isValidMongoId(id)) return res.status(200).json({ message: 'Not Valid MongoDB' });
-      const room = await Room.find({ members: id });
+      const room = await Room.find({ members: id })
+        .populate('members', ['username', 'createdAt'])
+        .populate('admin', ['username', 'createdAt'])
+        .exec();
       return res.status(200).json({ room: room });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }

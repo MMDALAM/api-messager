@@ -2,9 +2,9 @@
   "name": "api.starter",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "main.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon main.js"
   },
   "keywords": [],
   "author": "",

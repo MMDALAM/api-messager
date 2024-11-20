@@ -9,9 +9,14 @@ const handleSocketError = (socket, type, message) => {
 // ارسال لیست کاربران به همه کلاینت‌ها
 const broadcastUserLists = async (io) => {
   try {
-    const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
+    // const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
 
-    io.emit('onlineUsers', onlineUsers);
+    const users = await userModel.find({}, { username: 1, status: 1 }).sort({
+      status: -1,
+    });
+    io.emit('users', users);
+
+    // io.emit('onlineUsers', onlineUsers);
   } catch (error) {
     console.error('Error broadcasting user lists:', error);
   }

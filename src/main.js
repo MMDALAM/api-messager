@@ -5,7 +5,7 @@ const http = require('http');
 const cors = require('cors');
 require('dotenv').config();
 // const { SERVER_PORT } = process.env;
-const SERVER_PORT = 3000;
+const SERVER_PORT = 5050;
 const createError = require('http-errors');
 const { AllRouters } = require('./routers/router');
 const initSocket = require('./utils/socket.io/socket');
@@ -32,9 +32,8 @@ module.exports = class Application {
   }
 
   createMongodb() {
-    // const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
-    const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
-    console.log(DATABASE_MONGODB);
+    const DATABASE_MONGODB = `mongodb://${process.env.DATABASE_MONGODB_HOST}:${process.env.DATABASE_MONGODB_PORT}/message_api`;
+    // const DATABASE_MONGODB = `mongodb+srv://mmdalam:Mm11337788@cluster0.zf6rcuf.mongodb.net/message_api`;
     mongoose.connect(DATABASE_MONGODB);
     mongoose.set('strictPopulate', true);
     mongoose.set('strictQuery', true);
