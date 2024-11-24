@@ -103,8 +103,16 @@ const initSocket = (server) => {
           .exec();
 
         // ارسال پیام به همه اعضای روم
-        room.members.forEach((memberId) => {
+        room.members.forEach(async (memberId) => {
           io.to(memberId.toString()).emit('newMsg', newMsg);
+          const userRooms = await Room.find({ members: memberId })
+            .sort({ lastMessage: -1 })
+            .populate('members', ['username', 'createdAt'])
+            .populate('admin', ['username', 'createdAt'])
+            .populate('lastMessage', ['content', 'createdAt'])
+            .sort({ 'lastMessage.createdAt': -1 })
+            .exec();
+          io.to(memberId.toString()).emit('rooms', userRooms);
         });
       } catch (error) {
         return handleSocketError(socket, 'message', error.message);
@@ -112,9 +120,13 @@ const initSocket = (server) => {
     });
 
     socket.on('disconnect', async () => {
-      const userId = getUserIdFromParams(socket);
-      if (userId) {
-        await setUserStatus(userId, 'offline', socket, io);
+      try {
+        const userId = await getUserIdFromParams(socket);
+        if (userId) {
+          await setUserStatus(userId, 'offline', socket, io);
+        }
+      } catch (error) {
+        return handleSocketError(socket, 'error', 'error to disconnect');
       }
     });
   });

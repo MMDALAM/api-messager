@@ -10,9 +10,11 @@ class roomController extends controller {
       if (!isValidMongoId(id)) return res.status(200).json({ message: 'Not Valid MongoDB' });
 
       const room = await Room.find({ members: id })
+        .sort({ lastMessage: -1 })
         .populate('members', ['username', 'createdAt'])
         .populate('admin', ['username', 'createdAt'])
-        .populate('lastMessage', ['room', 'sender', 'content', 'createdAt'])
+        .populate('lastMessage', ['content', 'createdAt'])
+        .sort({ 'lastMessage.createdAt': -1 })
         .exec();
 
       return res.status(200).json({ room: room });
