@@ -12,7 +12,7 @@ class messageController extends controller {
       const room = await Room.findById(id);
 
       let page = parseInt(req.query.page) || 1;
-      let options = { sort: { createdAt: -1 }, limit: 10 };
+      let options = { sort: { createdAt: -1 }, limit: 15 };
 
       const messages = await Message.paginate(
         { room: room.id },
