@@ -19,6 +19,7 @@ const initSocket = (server) => {
     }
 
     socket.join(userId);
+
     socket.on('createRoom', async (data) => {
       try {
         const title = data?.data?.title;
@@ -55,7 +56,6 @@ const initSocket = (server) => {
       }
     });
 
-    // ارسال پیام
     socket.on('sendMessage', async (data) => {
       try {
         const roomId = data?.data?.roomId;
@@ -121,7 +121,6 @@ const initSocket = (server) => {
   return io;
 };
 
-// دریافت userId از params
 const getUserIdFromParams = async (socket) => {
   const userId = socket.handshake.query.id;
   const users = await User.findById(userId);
