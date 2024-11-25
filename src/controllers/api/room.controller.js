@@ -2,6 +2,7 @@ const controller = require('../contoller');
 const Room = require('../../models/room.model');
 const { isValidMongoId } = require('../../utils/function');
 const User = require('../../models/user.model');
+const Message = require('../../models/message.model');
 
 class roomController extends controller {
   async findManyRooms(req, res, next) {
@@ -33,7 +34,15 @@ class roomController extends controller {
       const user = await User.findById(id);
       if (!user) return res.status(404).json({ message: 'User not found' });
       if (rooms.admin.includes(id)) {
+        const messages = await Message.find({ room: rooms._id });
+
+        if (messages)
+          messages.forEach(async (id) => {
+            await Message.findOneAndDelete({ id });
+          });
+
         await Room.findOneAndDelete({ _id: room });
+
         return res.status(200).json({ message: 'Room Deleted' });
       }
       return res.status(404).json({ message: 'No Access to delete room' });

@@ -16,8 +16,8 @@ class messageController extends controller {
       const messages = await Message.paginate(
         { room: room.id },
         {
-          sort: { createdAt: -1 },
-          limit: 15,
+          sort: { createdAt: 1 },
+          limit: 30,
           page,
           populate: [
             { path: 'sender', select: ['username', 'createdAt'] },
