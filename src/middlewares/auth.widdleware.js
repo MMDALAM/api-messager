@@ -24,6 +24,7 @@ exports.verifyUser = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.verify = async (req, res, next) => {
   try {
     if (!req.headers['authorization']) return res.status(403).json({ message: 'Access denied. No token provided.' });
