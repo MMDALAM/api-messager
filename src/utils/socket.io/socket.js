@@ -29,8 +29,6 @@ const initSocket = (server) => {
         const description = data?.data?.description;
         const encryption = data?.data?.encryption;
 
-        if (!encryption) return handleSocketError(socket, 'error', 'type encryption not available');
-
         if (members.length < 2) return handleSocketError(socket, 'error', 'members must be at least two member');
 
         const rooms = await Room.find({ members: userId });
@@ -54,12 +52,10 @@ const initSocket = (server) => {
         const newRoom = new Room({
           title: title || null,
           members: members,
-          admin: [admin],
+          admin: admin,
           description: description || '',
           encryption: encryption,
         });
-
-        if (!title) return handleSocketError(socket, 'success', 'title cannot be empty');
 
         const keyFileName = data?.data?.keyFileName;
         const keyFilePath = data?.data?.keyFilePath;

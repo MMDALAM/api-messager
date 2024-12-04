@@ -8,7 +8,7 @@ const roomSchema = new mongoose.Schema(
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     admin: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: 'Message', default: null },
-    qrng: { type: [mongoose.Schema.Types.ObjectId], ref: 'Qrng', default: [] },
+    qrng: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Qrng', default: [] }],
     encryption: { type: Boolean, default: false },
     avatar: { type: String },
   },
