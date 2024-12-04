@@ -4,6 +4,7 @@ const { handleSocketError } = require('./socketHandlers');
 const setUserStatus = require('./userStatus');
 const User = require('../../models/user.model');
 const Message = require('../../models/message.model');
+const qrngModel = require('../../models/qrng.model');
 
 const initSocket = (server) => {
   const io = socketIO(server, {
@@ -26,21 +27,64 @@ const initSocket = (server) => {
         const members = data?.data?.members;
         const admin = data?.data?.admin;
         const description = data?.data?.description;
+        const encryption = data?.data?.encryption;
 
-        if (members.length < 2) {
-          return handleSocketError(socket, 'room', 'members must be at least two member');
+        if (!encryption) return handleSocketError(socket, 'error', 'type encryption not available');
+
+        if (members.length < 2) return handleSocketError(socket, 'error', 'members must be at least two member');
+
+        const rooms = await Room.find({ members: userId });
+        const areArraysEqual = (arr1, arr2) => {
+          if (arr1.length !== arr2.length) return false;
+          const set = new Set(arr1);
+          return arr2.every((item) => set.has(item));
+        };
+
+        // چک کردن گروه‌های تکراری
+        for (const room of rooms) {
+          // تبدیل ObjectId ها به string برای مقایسه صحیح
+          const currentMembers = room.members.map((member) => member.toString());
+          const newMembers = members.map((member) => member.toString());
+
+          if (areArraysEqual(currentMembers, newMembers)) {
+            return handleSocketError(socket, 'error', 'این گروه قبلاً ایجاد شده است');
+          }
         }
 
         const newRoom = new Room({
-          title: title,
+          title: title || null,
           members: members,
           admin: [admin],
           description: description || '',
+          encryption: encryption,
         });
 
-        if (!title) return handleSocketError(socket, 'room', 'title cannot be empty');
+        if (!title) return handleSocketError(socket, 'success', 'title cannot be empty');
+
+        const keyFileName = data?.data?.keyFileName;
+        const keyFilePath = data?.data?.keyFilePath;
+        const totalKeyLength = data?.data?.totalKeyLength;
+
+        if (encryption) {
+          if (!keyFileName) return handleSocketError(socket, 'error', 'keyFileName not available');
+          if (!keyFilePath) return handleSocketError(socket, 'error', 'keyFilePath not available');
+          if (!totalKeyLength) return handleSocketError(socket, 'error', 'totalKeyLength not available');
+        }
 
         await newRoom.save();
+
+        if (encryption) {
+          console.log('Encryption');
+          const newKey = new qrngModel({
+            roomId: newRoom._id,
+            keyFileName,
+            keyFilePath,
+            totalKeyLength,
+          });
+          await newKey.save();
+          await newRoom.qrng.push(newKey._id);
+          await newRoom.save();
+        }
 
         // ارسال اطلاعات گروه جدید به همه اعضا
         members.forEach(async (memberId) => {
@@ -48,6 +92,7 @@ const initSocket = (server) => {
             .populate('members', ['username', 'createdAt'])
             .populate('admin', ['username', 'createdAt'])
             .populate('lastMessage', ['content', 'createdAt'])
+            .populate('qrng')
             .exec();
           io.to(memberId.toString()).emit('rooms', userRooms);
         });

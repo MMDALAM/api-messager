@@ -3,11 +3,13 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const roomSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
+    title: { type: String, default: null },
     description: { type: String },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     admin: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: 'Message', default: null },
+    qrng: { type: [mongoose.Schema.Types.ObjectId], ref: 'Qrng', default: [] },
+    encryption: { type: Boolean, default: false },
     avatar: { type: String },
   },
   { timestamps: true }
