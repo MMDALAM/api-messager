@@ -1,6 +1,6 @@
 const socketIO = require('socket.io');
 const Room = require('../../models/room.model');
-const { handleSocketError } = require('./socketHandlers');
+const { socketMessage } = require('./socketHandlers');
 const setUserStatus = require('./userStatus');
 const User = require('../../models/user.model');
 const Message = require('../../models/message.model');
@@ -29,7 +29,7 @@ const initSocket = (server) => {
         const description = data?.data?.description;
         const encryption = data?.data?.encryption;
 
-        if (members.length < 2) return handleSocketError(socket, 'error', 'members must be at least two member');
+        if (members.length < 2) return socketMessage(socket, 'error', 'Room', 'members must be at least two member');
 
         const rooms = await Room.find({ members: userId });
         const areArraysEqual = (arr1, arr2) => {
@@ -45,7 +45,7 @@ const initSocket = (server) => {
           const newMembers = members.map((member) => member.toString());
 
           if (areArraysEqual(currentMembers, newMembers)) {
-            return handleSocketError(socket, 'error', 'این گروه قبلاً ایجاد شده است');
+            return socketMessage(socket, 'error', 'Room', 'این گروه قبلاً ایجاد شده است');
           }
         }
 
@@ -62,9 +62,9 @@ const initSocket = (server) => {
         const totalKeyLength = data?.data?.totalKeyLength;
 
         if (encryption) {
-          if (!keyFileName) return handleSocketError(socket, 'error', 'keyFileName not available');
-          if (!keyFilePath) return handleSocketError(socket, 'error', 'keyFilePath not available');
-          if (!totalKeyLength) return handleSocketError(socket, 'error', 'totalKeyLength not available');
+          if (!keyFileName) return socketMessage(socket, 'error', 'Room', 'keyFileName not available');
+          if (!keyFilePath) return socketMessage(socket, 'error', 'Room', 'keyFilePath not available');
+          if (!totalKeyLength) return socketMessage(socket, 'error', 'Room', 'totalKeyLength not available');
         }
 
         await newRoom.save();
@@ -93,7 +93,7 @@ const initSocket = (server) => {
           io.to(memberId.toString()).emit('rooms', userRooms);
         });
       } catch (error) {
-        return handleSocketError(socket, 'room', error.message);
+        return socketMessage(socket, 'error', 'room', error.message);
       }
     });
 
@@ -105,11 +105,11 @@ const initSocket = (server) => {
         // بررسی عضویت کاربر در روم
         const room = await Room.findById(roomId);
         if (!room) {
-          return handleSocketError(socket, 'message', 'Room not found');
+          return socketMessage(socket, 'error', 'message', 'Room not found');
         }
 
         if (!room.members.includes(userId)) {
-          return handleSocketError(socket, 'message', 'You are not a member of this room');
+          return socketMessage(socket, 'error', 'message', 'You are not a member of this room');
         }
 
         // ایجاد پیام جدید
@@ -156,7 +156,7 @@ const initSocket = (server) => {
           io.to(memberId.toString()).emit('rooms', userRooms);
         });
       } catch (error) {
-        return handleSocketError(socket, 'message', error.message);
+        return socketMessage(socket, 'error', 'message', error.message);
       }
     });
 
@@ -167,7 +167,7 @@ const initSocket = (server) => {
           await setUserStatus(userId, 'offline', socket, io);
         }
       } catch (error) {
-        return handleSocketError(socket, 'error', 'error to disconnect');
+        return socketMessage(socket, 'error', 'offline', 'error to disconnect');
       }
     });
   });
@@ -179,7 +179,7 @@ const getUserIdFromParams = async (socket) => {
   const users = await User.findById(userId);
   if (!userId || typeof userId !== 'string' || !userId.match(/^[0-9a-fA-F]{24}$/) || !users) {
     // if (users) return true;
-    return handleSocketError(socket, 'error', 'Invalid userId');
+    return socketMessage(socket, 'error', 'online', 'Invalid userId');
   }
   return userId;
 };
