@@ -1,4 +1,3 @@
-const userModel = require('../../models/user.model');
 const controller = require('../contoller');
 
 class apiController extends controller {
