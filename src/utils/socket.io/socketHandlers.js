@@ -3,7 +3,7 @@ const Room = require('../../models/room.model');
 
 // مدیریت خطاها
 const socketMessage = (socket, method, type, message) => {
-  socket.emit('message', { method: method, type, message });
+  socket.emit('messages', { method: method, type, message });
 };
 
 // ارسال لیست کاربران به همه کلاینت‌ها

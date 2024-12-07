@@ -31,6 +31,11 @@ const initSocket = (server) => {
 
         if (members.length < 2) return socketMessage(socket, 'error', 'Room', 'members must be at least two member');
 
+        const validateMember = await findUser(socket, members);
+        if (!validateMember) return socketMessage(socket, 'error', 'members', `Not Found UserID`);
+        const validateAdmin = await findUser(socket, admin);
+        if (!validateAdmin) return socketMessage(socket, 'error', 'admin', `Not Found UserID`);
+
         const rooms = await Room.find({ members: userId });
         const areArraysEqual = (arr1, arr2) => {
           if (arr1.length !== arr2.length) return false;
@@ -70,7 +75,6 @@ const initSocket = (server) => {
         await newRoom.save();
 
         if (encryption) {
-          console.log('Encryption');
           const newKey = new qrngModel({
             roomId: newRoom._id,
             keyFileName,
@@ -90,6 +94,7 @@ const initSocket = (server) => {
             .populate('lastMessage', ['content', 'createdAt'])
             .populate('qrng')
             .exec();
+          console.log(userRooms.members);
           io.to(memberId.toString()).emit('rooms', userRooms);
         });
       } catch (error) {
@@ -182,6 +187,23 @@ const getUserIdFromParams = async (socket) => {
     return socketMessage(socket, 'error', 'online', 'Invalid userId');
   }
   return userId;
+};
+
+const findUser = async (socket, users) => {
+  try {
+    // Using Promise.all to handle all async operations
+    await Promise.all(
+      users.map(async (userId) => {
+        const user = await User.findById(userId);
+        if (!user) throw new Error(`Not Found UserID : ${userId}`);
+      })
+    );
+
+    return true; // All users were found
+  } catch (error) {
+    socketMessage(socket, 'error', 'users', error.message);
+    return false; // At least one user was not found
+  }
 };
 
 module.exports = initSocket;
