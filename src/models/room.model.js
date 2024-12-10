@@ -3,7 +3,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const roomSchema = new mongoose.Schema(
   {
-    title: { type: String, default: null },
+    title: { type: String },
     description: { type: String },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     admin: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

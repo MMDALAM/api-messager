@@ -31,7 +31,8 @@ const initSocket = (server) => {
         const description = data?.data?.description;
 
         if (members.length < 2) return socketMessage(socket, 'error', 'Room', 'members must be at least two member');
-        if (!title) return socketMessage(socket, 'error', 'Room', 'Title is empty.  ');
+
+        if (!title) return socketMessage(socket, 'error', 'Room', 'Title is empty');
 
         const validateMember = await findUser(socket, members);
         if (!validateMember) return socketMessage(socket, 'error', 'members', `Not Found UserID`);
@@ -192,7 +193,6 @@ const findUser = async (socket, users) => {
         if (!user) throw new Error(`Not Found UserID : ${userId}`);
       })
     );
-
     return true;
   } catch (error) {
     socketMessage(socket, 'error', 'users', error.message);

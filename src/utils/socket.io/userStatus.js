@@ -6,8 +6,7 @@ const setUserStatus = async (userId, status, socket, io) => {
     const users = await userModel.find({}, { username: 1, status: 1 }).sort({
       status: -1,
     });
-    if (!users) return socketMessage(socket, 'error', 'users', 'این گروه قبلاً ایجاد شده است');
-
+    if (!users) return socketMessage(socket, 'error', 'users', 'user not found');
     io.emit('users', users);
   } catch (error) {
     return socketMessage(socket, 'error', 'user', error.message);
