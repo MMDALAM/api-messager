@@ -19,7 +19,7 @@
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.7.2",
+    "mongoose": "^8.8.3",
     "mongoose-paginate-v2": "^1.8.5",
     "socket.io": "^4.8.1"
   },
