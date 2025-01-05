@@ -37,9 +37,6 @@ class roomController extends controller {
       if (!user) return res.status(404).json({ message: 'User not found' });
 
       if (rooms.admin.includes(id)) {
-        // const messages = await Message.find({ room: rooms._id });
-
-        // if (messages)
         await Message.deleteMany({ room: rooms.id });
 
         await Room.findByIdAndDelete(rooms.id);
