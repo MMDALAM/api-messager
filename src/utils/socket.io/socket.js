@@ -89,7 +89,7 @@ const initSocket = (server) => {
 
         room.lastMessage = newMessage._id;
         await room.save();
-        // پاپیولیت کردن اطلاعات فرستنده
+
         const newMsg = await Message.findById(newMessage._id, { room: 1, sender: 1, content: 1, createdAt: 1 })
           .populate('sender', ['username', 'createdAt'])
           .populate({
