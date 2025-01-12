@@ -14,9 +14,7 @@ const initSocket = (server) => {
 
   io.on('connection', async (socket) => {
     const userId = await getUserIdFromParams(socket);
-    if (userId) {
-      setUserStatus(userId, 'online', socket, io);
-    }
+    if (userId) setUserStatus(userId, 'online', socket, io);
 
     socket.join(userId);
 
