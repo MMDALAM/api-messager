@@ -67,13 +67,9 @@ const initSocket = (server) => {
 
         // بررسی عضویت کاربر در روم
         const room = await Room.findById(roomId);
-        if (!room) {
-          return socketMessage(socket, 'error', 'message', 'Room not found');
-        }
+        if (!room) return socketMessage(socket, 'error', 'message', 'Room not found');
 
-        if (!room.members.includes(userId)) {
-          return socketMessage(socket, 'error', 'message', 'You are not a member of this room');
-        }
+        if (!room.members.includes(userId)) return socketMessage(socket, 'error', 'message', 'You are not a member of this room');
 
         // ایجاد پیام جدید
         const newMessage = new Message({
