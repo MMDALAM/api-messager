@@ -1,12 +1,10 @@
 const userModel = require('../../models/user.model');
-const Room = require('../../models/room.model');
 
 // مدیریت خطاها
 const socketMessage = (socket, method, type, message) => {
   socket.emit('messages', { method: method, type, message });
 };
 
-// ارسال لیست کاربران به همه کلاینت‌ها
 // const broadcastUserLists = async (io) => {
 //   try {
 //     // const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
@@ -43,7 +41,4 @@ const socketMessage = (socket, method, type, message) => {
 
 module.exports = {
   socketMessage,
-  // broadcastUserLists,
-  // validateUserId,
-  // roomsLists,
 };

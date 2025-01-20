@@ -76,7 +76,7 @@ const initSocket = (server) => {
           room: roomId,
           sender: userId,
           content,
-          // seen: [userId], // فرستنده پیام رو دیده
+          // seen: [userId],
         });
 
         await newMessage.save();
