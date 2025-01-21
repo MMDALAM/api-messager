@@ -5,9 +5,6 @@ const socketMessage = (socket, method, type, message) => {
   socket.emit('messages', { method: method, type, message });
 };
 
-// const broadcastUserLists = async (io) => {
-//   try {
-//     // const onlineUsers = await userModel.find({ status: 'online' }, { username: 1, status: 1 });
 
 //     const users = await userModel.find({}, { username: 1, status: 1 }).sort({
 //       status: -1,
